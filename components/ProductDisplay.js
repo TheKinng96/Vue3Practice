@@ -30,8 +30,8 @@ app.component("product-display", {
             ></div>
             <button
               class="button"
-              :class="{ disabledButton: !inStock}"
-              :disabled="!inStock"
+              :class="{ disabledButton: updateInventory <= 0}"
+              :disabled="updateInventory <= 0"
               @click="addToCart"
             >
               Add to Cart
@@ -53,7 +53,7 @@ app.component("product-display", {
           id: 2234,
           color: "green",
           image: "./assets/images/socks_green.jpg",
-          quantity: 50,
+          quantity: 3,
         },
         {
           id: 2235,
@@ -66,8 +66,7 @@ app.component("product-display", {
   },
   methods: {
     addToCart() {
-      this.cart++;
-      this.inventory--;
+      this.$emit("add-to-cart", this.variants[this.selectedVariant].id);
     },
     updateVariant(index) {
       this.selectedVariant = index;
@@ -80,8 +79,8 @@ app.component("product-display", {
     image() {
       return this.variants[this.selectedVariant].image;
     },
-    inStock() {
-      return this.variants[this.selectedVariant].quantity;
+    updateInventory() {
+      return (this.inventory = this.variants[this.selectedVariant].quantity);
     },
     shipping() {
       if (this.premium) {
